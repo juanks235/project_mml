@@ -7,11 +7,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class VAE(nn.Module):
-    def __init__(self, timesteps, features, latent_dim):
+    def __init__(self, timesteps, features, latent_dim, device):
         super(VAE, self).__init__()
         self.timesteps = timesteps
         self.features = features
         self.latent_dim = latent_dim
+        self.device = device
 
         # Encoder
         self.encoder_lstm = nn.LSTM(input_size=features, hidden_size=100, batch_first=True)
@@ -60,9 +61,9 @@ class VAE(nn.Module):
     
     def generate_sequences(self, num_samples):
         with torch.no_grad():
-            latent_samples = torch.randn(num_samples, self.latent_dim)
+            latent_samples = torch.randn(num_samples, self.latent_dim).to(self.device)
             generated_sequences = self.decode(latent_samples)
-            return generated_sequences.numpy()
+            return generated_sequences.cpu().numpy()
     
     def plot_sequences(self, training_sequences, generated_sequences):
         plt.figure(figsize=(12, 6))
@@ -90,14 +91,17 @@ if __name__ == "__main__":
     
     dataset = TensorDataset(sequences, sequences) 
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+    
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    vae = VAE(timesteps=n_in, features=1, latent_dim=2)
+    vae = VAE(timesteps=n_in, features=1, latent_dim=2, device=device).to(device)
     vae.optimizer = optim.Adam(vae.parameters(), lr=1e-3)
 
     # Training loop
     epochs = 300
     for epoch in range(epochs):
         for batch_x, _ in dataloader:
+            batch_x = batch_x.to(device)
             loss = vae.training_step(batch_x)
         if epoch % 10 == 0:
             print(f'Epoch {epoch}, Loss: {loss}')
