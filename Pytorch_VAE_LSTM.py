@@ -7,21 +7,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class VAE(nn.Module):
-    def __init__(self, timesteps, features, latent_dim, device):
+    def __init__(self, timesteps, features, latent_dim, device, hidden_size):
         super(VAE, self).__init__()
         self.timesteps = timesteps
         self.features = features
         self.latent_dim = latent_dim
         self.device = device
+        self.hidden_size = hidden_size
 
         # Encoder
-        self.encoder_lstm = nn.LSTM(input_size=features, hidden_size=10, batch_first=True)
-        self.fc_mean = nn.Linear(10, latent_dim)
-        self.fc_log_var = nn.Linear(10, latent_dim)
+        self.encoder_lstm = nn.LSTM(input_size=features, hidden_size=self.hidden_size, batch_first=True)
+        self.fc_mean = nn.Linear(self.hidden_size, latent_dim)
+        self.fc_log_var = nn.Linear(self.hidden_size, latent_dim)
 
         # Decoder
-        self.decoder_lstm = nn.LSTM(input_size=latent_dim, hidden_size=10, batch_first=True)
-        self.time_distributed_dense = nn.Linear(10, features)
+        self.decoder_lstm = nn.LSTM(input_size=latent_dim, hidden_size=self.hidden_size, batch_first=True)
+        self.time_distributed_dense = nn.Linear(self.hidden_size, features)
 
     def encode(self, x):
         h, _ = self.encoder_lstm(x)
@@ -85,6 +86,7 @@ if __name__ == "__main__":
     batch_size = 16
     n_in = 9
     num_sequences = 1000
+    hidden_size = 10
 
     sequences = np.random.laplace(loc=3, scale=5, size=(num_sequences, n_in, 1))
     sequences = torch.tensor(sequences, dtype=torch.float32)
@@ -94,7 +96,7 @@ if __name__ == "__main__":
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    vae = VAE(timesteps=n_in, features=1, latent_dim=2, device=device).to(device)
+    vae = VAE(timesteps=n_in, features=1, latent_dim=2, device=device, hidden_size=hidden_size).to(device)
     vae.optimizer = optim.Adam(vae.parameters(), lr=1e-3)
 
     # Training loop
