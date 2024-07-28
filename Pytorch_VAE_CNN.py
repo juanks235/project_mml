@@ -77,12 +77,12 @@ class ConvVAE(nn.Module):
         
         for i in range(num_images):
             # Plot training images
-            axs[0, i].imshow(training_images[i].transpose(1, 2, 0))  # Assuming images are [channels, height, width]
+            axs[0, i].imshow(training_images[i].transpose(1, 2, 0)) 
             axs[0, i].set_title('Training Image')
             axs[0, i].axis('off')
             
             # Plot generated images
-            axs[1, i].imshow(generated_images[i].transpose(1, 2, 0))  # Assuming images are [channels, height, width]
+            axs[1, i].imshow(generated_images[i].transpose(1, 2, 0)) 
             axs[1, i].set_title('Generated Image')
             axs[1, i].axis('off')
         
@@ -91,7 +91,6 @@ class ConvVAE(nn.Module):
         plt.close()
 
 if __name__ == "__main__":
-    # Data generation
     batch_size = 16
     in_channels = 1
     img_size = 64
@@ -117,7 +116,6 @@ if __name__ == "__main__":
         if epoch % 10 == 0:
             print(f'Epoch {epoch}, Loss: {loss}')
 
-    # Generate and plot images
     num_samples = 10
     generated_images = vae.generate_images(num_samples)
     vae.plot_images(images[:num_samples].numpy(), generated_images)
