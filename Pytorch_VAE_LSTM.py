@@ -47,9 +47,7 @@ class VAE(nn.Module):
 
     def compute_loss(self, x, x_reconstructed, z_mean, z_log_var):
         reconstruction_loss = nn.MSELoss()(x, x_reconstructed)
-
         kl_loss = -0.5 * torch.mean(z_log_var - torch.square(z_mean) - torch.exp(z_log_var) + 1)
-
         return reconstruction_loss + kl_loss
 
     def training_step(self, x):
