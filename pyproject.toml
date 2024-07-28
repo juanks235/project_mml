@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "mml-project"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+jupyter = "^1.0.0"
+notebook = "^7.2.1"
+pandas = "^2.2.2"
+numpy = "1.26.4"
+datasets = "^2.20.0"
+beautifulsoup4 = "^4.12.3"
+librosa = "^0.10.2.post1"
+tqdm = "^4.66.4"
+matplotlib = "^3.9.1"
+seaborn = "^0.13.2"
+torch = "^2.4.0"
+tensorflow = "^2.17.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
