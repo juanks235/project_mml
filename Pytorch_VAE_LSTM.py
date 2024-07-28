@@ -15,13 +15,13 @@ class VAE(nn.Module):
         self.device = device
 
         # Encoder
-        self.encoder_lstm = nn.LSTM(input_size=features, hidden_size=100, batch_first=True)
-        self.fc_mean = nn.Linear(100, latent_dim)
-        self.fc_log_var = nn.Linear(100, latent_dim)
+        self.encoder_lstm = nn.LSTM(input_size=features, hidden_size=10, batch_first=True)
+        self.fc_mean = nn.Linear(10, latent_dim)
+        self.fc_log_var = nn.Linear(10, latent_dim)
 
         # Decoder
-        self.decoder_lstm = nn.LSTM(input_size=latent_dim, hidden_size=100, batch_first=True)
-        self.time_distributed_dense = nn.Linear(100, features)
+        self.decoder_lstm = nn.LSTM(input_size=latent_dim, hidden_size=10, batch_first=True)
+        self.time_distributed_dense = nn.Linear(10, features)
 
     def encode(self, x):
         h, _ = self.encoder_lstm(x)
