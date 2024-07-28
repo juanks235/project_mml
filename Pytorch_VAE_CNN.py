@@ -105,7 +105,7 @@ if __name__ == "__main__":
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    vae = ConvVAE(in_channels=in_channels, img_size=img_size, latent_dim=20).to(device)
+    vae = ConvVAE(in_channels=in_channels, img_size=img_size, latent_dim=20, device=device).to(device)
     vae.optimizer = optim.Adam(vae.parameters(), lr=1e-3)
 
     # Training loop
