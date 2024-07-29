@@ -141,7 +141,8 @@ def convert_npy_to_audio(magnitude_path, phase_path, output_wav_path, frame_leng
     # Cargar los archivos .npy de magnitud y fase
     magnitude = np.load(magnitude_path)
     phase = np.load(phase_path)
-    
+    if magnitude.size == 0 or phase.size == 0:
+        raise ValueError("El archivo de magnitud o fase está vacío.")
     # Convertir el espectrograma de vuelta a la señal de audio
     waveform = spectrogram_to_waveform(magnitude, phase, frame_length, frame_step, fft_length)
     
